@@ -1,0 +1,156 @@
+About Dia
+Dia
+Check for Updates…
+Check for Updates...
+Install Update…
+Install Update...
+Downloading Update…
+Downloading Update...
+Invite to Dia…
+Settings…
+Settings...
+Set as Default Browser
+Personalize Dia
+Import from Another Browser…
+Import from Another Browser...
+Services
+Hide Dia
+Hide Others
+Show All
+Sign Out
+Quit Dia
+File
+New Tab
+New Tab in Group
+New Window
+New Incognito Window
+Reopen Closed Tab
+Chat…
+Chat...
+Focus Chat
+Open Command Bar
+Close Window
+Close Tab
+Close All Tabs
+Clean Up Tabs
+Share…
+Share...
+Print…
+Print...
+Edit
+Undo
+Redo
+Cut
+Copy
+Copy URL
+Copy URL as Markdown
+Paste
+Paste and Match Style
+Delete
+Select All
+Find
+Find…
+Find...
+Find Next
+Find Previous
+Use Selection for Find
+Spelling and Grammar
+Show Spelling and Grammar
+Check Document Now
+Check Spelling While Typing
+Check Grammar With Spelling
+Correct Spelling Automatically
+Substitutions
+Show Substitutions
+Smart Copy/Paste
+Smart Quotes
+Smart Dashes
+Smart Links
+Data Detectors
+Text Replacement
+Transformations
+Make Upper Case
+Make Lower Case
+Capitalize
+Speech
+Start Speaking
+Stop Speaking
+Start Dictation…
+Start Dictation...
+Emoji & Symbols
+View
+Appearance
+Automatic
+Light
+Dark
+Refresh
+Force Refresh the Page
+Show Tabs in Sidebar
+Auto-Hide Tabs
+Open Split Pane
+Focus Next Split Pane
+Focus Previous Split Pane
+Show Bookmarks Bar
+Always
+On New Tab Only
+Never
+Toggle Bookmarks Bar
+Show Full URL
+Zoom to Actual Size
+Zoom In
+Zoom Out
+Enter Full Screen
+Exit Full Screen
+Developer
+Developer Tools
+Tabs
+Go Back
+Go Forward
+Next Tab
+Previous Tab
+Search Tabs…
+Search Tabs...
+Pin
+Unpin
+Duplicate
+New Group with Tab
+Move to Window
+Move to Profile
+New Profile…
+New Profile...
+%@ — %@ Tabs
+Rename…
+Rename...
+Change Icon…
+Change Icon...
+Mute
+Unmute
+Bookmarks
+Bookmark This Page
+Manage Bookmarks
+Recent Bookmarks
+Empty
+History
+Show History…
+Show History...
+Extensions
+Add Extension…
+Add Extension...
+Manage Extensions…
+Manage Extensions...
+Pin Extensions…
+Pin Extensions...
+Window
+Minimize
+Minimize All
+Bring All to Front
+Merge All Windows
+Downloads
+Task Manager
+Help
+Chat with Support
+Video Tour
+Status
+Copy Diagnostics
+Record Performance Issue…
+Record Performance Issue...

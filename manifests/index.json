@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "knownBuilds": [
+    {
+      "shortVersion": "1.41.1",
+      "buildVersion": "84131",
+      "coverage": "full",
+      "manifest": "manifests/1.41.1-84131.json",
+      "originalWebHashes": "manifests/1.41.1-84131.webui-original.sha256",
+      "patchedWebHashes": "manifests/1.41.1-84131.webui-patched.sha256"
+    }
+  ]
+}

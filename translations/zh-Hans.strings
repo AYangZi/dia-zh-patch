@@ -3,6 +3,12 @@
 "About Dia" = "关于 Dia";
 "Check for Updates…" = "检查更新…";
 "Check for Updates..." = "检查更新...";
+"Install Update…" = "安装更新…";
+"Install Update..." = "安装更新...";
+"Downloading Update…" = "正在下载更新…";
+"Downloading Update..." = "正在下载更新...";
+"Set as Default Browser" = "设为默认浏览器";
+"Personalize Dia" = "个性化 Dia";
 "Settings…" = "设置…";
 "Settings..." = "设置...";
 "Preferences…" = "偏好设置…";
@@ -35,6 +41,7 @@
 "Minimize" = "最小化";
 "Zoom" = "缩放";
 "Bring All to Front" = "前置全部窗口";
+"Merge All Windows" = "合并所有窗口";
 "Downloads" = "下载内容";
 "History" = "历史记录";
 "Bookmarks" = "书签";
@@ -86,6 +93,10 @@
 "Close Tabs to the Right" = "关闭右侧标签页";
 "Reopen Closed Tab" = "重新打开关闭的标签页";
 "Move Tab to New Window" = "将标签页移至新窗口";
+"Move to Profile" = "移到个人资料";
+"New Profile…" = "新建个人资料…";
+"New Profile..." = "新建个人资料...";
+"%@ — %@ Tabs" = "%@ — %@ 个标签页";
 "Search Tabs" = "搜索标签页";
 "Search tabs" = "搜索标签页";
 "Organize Tabs" = "整理标签页";
