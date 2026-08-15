@@ -1,0 +1,21 @@
+.DS_Store
+._*
+
+# 本地构建与发布产物
+lib/*.dylib
+dist/
+*.zip
+*.zip.sha256
+
+# 本地测试、审计、状态与备份
+.dia-zh-*/
+reports/
+state/
+backups/
+transactions/
+current-state
+
+# 编辑器与临时文件
+*.swp
+*.tmp
+*~

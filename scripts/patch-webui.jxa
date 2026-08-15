@@ -1,0 +1,292 @@
+#!/usr/bin/osascript -l JavaScript
+
+ObjC.import("Foundation");
+
+function fail(message) {
+  throw new Error(message);
+}
+
+function readUtf8(path) {
+  const data = $.NSData.dataWithContentsOfFile(path);
+  if (!data) {
+    fail("无法读取文件：" + path);
+  }
+  const text = $.NSString.alloc.initWithDataEncoding(data, $.NSUTF8StringEncoding);
+  if (!text) {
+    fail("文件不是 UTF-8 文本：" + path);
+  }
+  return ObjC.unwrap(text);
+}
+
+function writeUtf8Atomic(path, text) {
+  const value = $(text);
+  const ok = value.writeToFileAtomicallyEncodingError(
+    path,
+    true,
+    $.NSUTF8StringEncoding,
+    null
+  );
+  if (!ok) {
+    fail("无法写入文件：" + path);
+  }
+}
+
+function readJson(path) {
+  return JSON.parse(readUtf8(path));
+}
+
+function normalize(path) {
+  return path.replace(/\\/g, "/").replace(/\/+/g, "/");
+}
+
+function join(base, relative) {
+  return normalize(base.replace(/\/$/, "") + "/" + relative.replace(/^\//, ""));
+}
+
+function isExcluded(relative, fragments) {
+  const normalized = normalize(relative);
+  return fragments.some((fragment) => normalized.indexOf(fragment) !== -1);
+}
+
+function collectFiles(appPath, manifest) {
+  const fm = $.NSFileManager.defaultManager;
+  const allowedExtensions = {};
+  manifest.webExtensions.forEach((extension) => {
+    allowedExtensions[extension.toLowerCase()] = true;
+  });
+
+  const files = [];
+  manifest.webRoots.forEach((relativeRoot) => {
+    const root = join(appPath, relativeRoot);
+    let isDirectory = Ref();
+    if (!fm.fileExistsAtPathIsDirectory(root, isDirectory) || !isDirectory[0]) {
+      fail("缺少 WebUI 资源目录：" + relativeRoot);
+    }
+    const enumerator = fm.enumeratorAtPath(root);
+    let rootFileCount = 0;
+    let item;
+    while ((item = enumerator.nextObject) != null) {
+      const relative = ObjC.unwrap(item);
+      if (relative == null) {
+        break;
+      }
+      if (isExcluded(relative, manifest.excludedPathFragments || [])) {
+        continue;
+      }
+      const extension = "." + relative.split(".").pop().toLowerCase();
+      if (!allowedExtensions[extension]) {
+        continue;
+      }
+      const fullPath = join(root, relative);
+      let childIsDirectory = Ref();
+      if (fm.fileExistsAtPathIsDirectory(fullPath, childIsDirectory) && !childIsDirectory[0]) {
+        files.push({
+          fullPath,
+          relativePath: normalize(relativeRoot + "/" + relative)
+        });
+        rootFileCount += 1;
+      }
+    }
+    const expectation = (manifest.webRootExpectations || []).find(
+      (candidate) => candidate.path === relativeRoot
+    );
+    if (!expectation) {
+      fail("清单缺少 WebUI 目录文件数约束：" + relativeRoot);
+    }
+    if (rootFileCount !== Number(expectation.expectedTextFiles)) {
+      fail(
+        "WebUI 目录文件数异常：" +
+        relativeRoot +
+        "，预期 " +
+        expectation.expectedTextFiles +
+        "，实际 " +
+        rootFileCount
+      );
+    }
+  });
+  files.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return files;
+}
+
+function countOccurrences(text, needle) {
+  if (!needle) {
+    return 0;
+  }
+  return text.split(needle).length - 1;
+}
+
+function variants(rule) {
+  const escapedSource = rule.source.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const escapedTarget = rule.target.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const singleSource = rule.source.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  const singleTarget = rule.target.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  return [
+    { find: '"' + escapedSource + '"', replace: '"' + escapedTarget + '"' },
+    { find: "'" + singleSource + "'", replace: "'" + singleTarget + "'" },
+    { find: ">" + rule.source + "<", replace: ">" + rule.target + "<" },
+    {
+      find: "&quot;" + rule.source + "&quot;",
+      replace: "&quot;" + rule.target + "&quot;"
+    }
+  ];
+}
+
+function auditFiles(files, manifest, expectedSide) {
+  const contents = {};
+  const byRelativePath = {};
+  files.forEach((file) => {
+    contents[file.fullPath] = readUtf8(file.fullPath);
+    byRelativePath[file.relativePath] = file;
+  });
+
+  const results = manifest.webRules.map((rule) => {
+    const ruleVariants = expectedSide === "target"
+      ? variants({ source: rule.target, target: rule.source })
+      : variants(rule);
+    const originalVariants = variants(rule);
+    let count = 0;
+    let remainingSourceMatches = 0;
+    const matchedFiles = [];
+    const expectedFiles = rule.files || [];
+    expectedFiles.forEach((expectation) => {
+      const file = byRelativePath[expectation.path];
+      if (!file) {
+        fail("规则引用了未扫描的文件：" + rule.id + " -> " + expectation.path);
+      }
+      const text = contents[file.fullPath];
+      let fileCount = 0;
+      ruleVariants.forEach((variant) => {
+        fileCount += countOccurrences(text, variant.find);
+      });
+      let fileRemainingSources = 0;
+      if (expectedSide === "target") {
+        originalVariants.forEach((variant) => {
+          fileRemainingSources += countOccurrences(text, variant.find);
+        });
+      }
+      const expectedFileMatches = Number(
+        expectedSide === "target" ? expectation.patchedMatches : expectation.matches
+      );
+      count += fileCount;
+      remainingSourceMatches += fileRemainingSources;
+      matchedFiles.push({
+        path: file.relativePath,
+        count: fileCount,
+        expected: expectedFileMatches,
+        remainingSourceMatches: fileRemainingSources,
+        valid:
+          fileCount === expectedFileMatches &&
+          (expectedSide !== "target" || fileRemainingSources === 0)
+      });
+    });
+    const expected = Number(
+      expectedSide === "target" ? rule.expectedPatchedMatches : rule.expectedMatches
+    );
+    const valid =
+      count === expected &&
+      remainingSourceMatches === 0 &&
+      matchedFiles.every((file) => file.valid);
+    return {
+      id: rule.id,
+      source: rule.source,
+      target: rule.target,
+      count,
+      expectedMatches: expected,
+      remainingSourceMatches,
+      valid,
+      matchedFiles
+    };
+  });
+
+  return { contents, results };
+}
+
+function applyRules(files, manifest, audited) {
+  const changed = [];
+  files.forEach((file) => {
+    let text = audited.contents[file.fullPath];
+    const original = text;
+    manifest.webRules.forEach((rule) => {
+      if (!(rule.files || []).some((expectation) => expectation.path === file.relativePath)) {
+        return;
+      }
+      variants(rule).forEach((variant) => {
+        text = text.split(variant.find).join(variant.replace);
+      });
+    });
+    if (text !== original) {
+      writeUtf8Atomic(file.fullPath, text);
+      changed.push(file.relativePath);
+    }
+  });
+  return changed;
+}
+
+function writeReport(path, report) {
+  const payload = JSON.stringify(report, null, 2) + "\n";
+  writeUtf8Atomic(path, payload);
+}
+
+function run(argv) {
+  if (argv.length !== 4) {
+    fail("用法：patch-webui.jxa <audit|apply|verify> <Dia.app> <manifest.json> <report.json>");
+  }
+  const mode = argv[0];
+  const appPath = normalize(argv[1]);
+  const manifestPath = normalize(argv[2]);
+  const reportPath = normalize(argv[3]);
+  if (mode !== "audit" && mode !== "apply" && mode !== "verify") {
+    fail("未知模式：" + mode);
+  }
+
+  const manifest = readJson(manifestPath);
+  const files = collectFiles(appPath, manifest);
+  const audited = auditFiles(files, manifest, mode === "verify" ? "target" : "source");
+  const invalid = audited.results.filter((result) => !result.valid);
+  const totalMatches = audited.results.reduce((sum, result) => sum + result.count, 0);
+  const minimumTotal = mode === "verify"
+    ? Number(manifest.expectedTotalPatchedMatches)
+    : Number(manifest.minimumTotalWebMatches || 0);
+  const maximumTotal = mode === "verify"
+    ? Number(manifest.expectedTotalPatchedMatches)
+    : Number(manifest.maximumTotalWebMatches);
+  const totalMatchesValid =
+    totalMatches >= minimumTotal &&
+    (!Number.isFinite(maximumTotal) || totalMatches <= maximumTotal);
+
+  const report = {
+    schemaVersion: 1,
+    productVersion: manifest.shortVersion,
+    buildVersion: manifest.buildVersion,
+    mode,
+    expectedSide: mode === "verify" ? "target" : "source",
+    scannedFiles: files.length,
+    valid: invalid.length === 0 && totalMatchesValid,
+    totalMatches,
+    minimumTotalMatches: minimumTotal,
+    maximumTotalMatches: maximumTotal,
+    totalMatchesValid,
+    invalidRuleIds: invalid.map((result) => result.id),
+    rules: audited.results,
+    changedFiles: []
+  };
+
+  if (invalid.length > 0 || !totalMatchesValid) {
+    writeReport(reportPath, report);
+    const details = report.invalidRuleIds.length > 0
+      ? report.invalidRuleIds.join(", ")
+      : "total=" + totalMatches;
+    fail("WebUI 规则匹配次数异常：" + details);
+  }
+
+  if (mode === "apply") {
+    report.changedFiles = applyRules(files, manifest, audited);
+  }
+  writeReport(reportPath, report);
+  return JSON.stringify({
+    valid: report.valid,
+    scannedFiles: report.scannedFiles,
+    changedFiles: report.changedFiles.length,
+    reportPath
+  });
+}

@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.command text eol=lf
+*.jxa text eol=lf
+*.strings text eol=lf
+*.sha256 text eol=lf

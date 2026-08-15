@@ -1,0 +1,1755 @@
+{
+  "schemaVersion": 1,
+  "product": "Dia",
+  "bundleIdentifier": "company.thebrowser.dia",
+  "officialTeamIdentifier": "S6N382Y83G",
+  "shortVersion": "1.41.1",
+  "buildVersion": "84131",
+  "minimumMacOS": "14.0",
+  "architecture": "arm64",
+  "criticalFiles": [
+    {
+      "path": "Contents/MacOS/Dia",
+      "bytes": 118037776
+    },
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 6792
+    },
+    {
+      "path": "Contents/Frameworks/ArcCore.framework/Versions/A/Resources/en.lproj/locale.pak",
+      "bytes": 587145
+    },
+    {
+      "path": "Contents/Frameworks/ArcCore.framework/Versions/A/Resources/zh_CN.lproj/locale.pak",
+      "bytes": 591310
+    },
+    {
+      "path": "Contents/Resources/web-chat-resources/dist/index.html",
+      "bytes": 849
+    },
+    {
+      "path": "Contents/Resources/web-chat-resources/dist/background.js",
+      "bytes": 207406
+    },
+    {
+      "path": "Contents/Resources/web-chat-resources/dist/manifest.json",
+      "bytes": 1059
+    },
+    {
+      "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site/index.html",
+      "bytes": 89399
+    },
+    {
+      "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+      "bytes": 50330
+    }
+  ],
+  "chromiumLocale": {
+    "source": "Contents/Frameworks/ArcCore.framework/Versions/A/Resources/zh_CN.lproj/locale.pak",
+    "destination": "Contents/Frameworks/ArcCore.framework/Versions/A/Resources/en.lproj/locale.pak",
+    "minimumBytes": 500000
+  },
+  "localization": {
+    "stringsFile": "translations/zh-Hans.strings",
+    "mainResourceDirectory": "Contents/Resources",
+    "bundleRoot": "Contents/Resources",
+    "bundleNamePrefixes": [
+      "BoostBrowser_",
+      "ARC_",
+      "ARCUI_",
+      "ARCClients_"
+    ],
+    "localeDirectories": [
+      "en.lproj",
+      "zh-Hans.lproj"
+    ]
+  },
+  "webRoots": [
+    "Contents/Resources/web-chat-resources/dist",
+    "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle",
+    "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site",
+    "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site"
+  ],
+  "webRootExpectations": [
+    {
+      "path": "Contents/Resources/web-chat-resources/dist",
+      "expectedTextFiles": 98
+    },
+    {
+      "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle",
+      "expectedTextFiles": 79
+    },
+    {
+      "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site",
+      "expectedTextFiles": 1
+    },
+    {
+      "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site",
+      "expectedTextFiles": 2
+    }
+  ],
+  "webExtensions": [
+    ".js",
+    ".html"
+  ],
+  "minimumTotalWebMatches": 215,
+  "maximumTotalWebMatches": 215,
+  "excludedPathFragments": [
+    ".map",
+    "/agents/",
+    "/prompts/",
+    "-prompt.txt",
+    "/spec.yaml"
+  ],
+  "webRules": [
+    {
+      "id": "web.history",
+      "source": "History",
+      "target": "历史记录",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/top-people/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.edit",
+      "source": "Edit",
+      "target": "编辑",
+      "expectedMatches": 4,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 4
+    },
+    {
+      "id": "web.undo",
+      "source": "Undo",
+      "target": "撤销",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.copy",
+      "source": "Copy",
+      "target": "复制",
+      "expectedMatches": 10,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 6,
+          "patchedMatches": 6
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 10
+    },
+    {
+      "id": "web.delete",
+      "source": "Delete",
+      "target": "删除",
+      "expectedMatches": 6,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 6
+    },
+    {
+      "id": "web.back",
+      "source": "Back",
+      "target": "后退",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/make-you-excellent/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.home",
+      "source": "Home",
+      "target": "主页",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.tab",
+      "source": "Tab",
+      "target": "标签页",
+      "expectedMatches": 4,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 4
+    },
+    {
+      "id": "web.search-google",
+      "source": "Search Google",
+      "target": "使用 Google 搜索",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.send",
+      "source": "Send",
+      "target": "发送",
+      "expectedMatches": 11,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 11
+    },
+    {
+      "id": "web.try-again",
+      "source": "Try again",
+      "target": "重试",
+      "expectedMatches": 7,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/make-you-excellent/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/project-tracker/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 10
+    },
+    {
+      "id": "web.add-context",
+      "source": "Add context",
+      "target": "添加上下文",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.thinking",
+      "source": "Thinking",
+      "target": "思考中",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.working",
+      "source": "Working",
+      "target": "处理中",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.cancel",
+      "source": "Cancel",
+      "target": "取消",
+      "expectedMatches": 10,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/up-next/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 10
+    },
+    {
+      "id": "web.done",
+      "source": "Done",
+      "target": "完成",
+      "expectedMatches": 6,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-goal/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 6
+    },
+    {
+      "id": "web.close",
+      "source": "Close",
+      "target": "关闭",
+      "expectedMatches": 9,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/top-people/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-goal/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 9
+    },
+    {
+      "id": "web.save",
+      "source": "Save",
+      "target": "保存",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/up-next/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 5
+    },
+    {
+      "id": "web.create",
+      "source": "Create",
+      "target": "创建",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.skill",
+      "source": "Skill",
+      "target": "技能",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/talent-kit/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.memory",
+      "source": "Memory",
+      "target": "记忆",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/top-people/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.connect-apps",
+      "source": "Connect apps",
+      "target": "连接应用",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.feedback",
+      "source": "Feedback",
+      "target": "反馈",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.confirm",
+      "source": "Confirm",
+      "target": "确认",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.continue",
+      "source": "Continue",
+      "target": "继续",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/make-you-excellent/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 5
+    },
+    {
+      "id": "web.next",
+      "source": "Next",
+      "target": "下一步",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/up-next/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/make-you-excellent/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.not-now",
+      "source": "Not now",
+      "target": "暂不",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.open",
+      "source": "Open",
+      "target": "打开",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/bridge-demo/index.html",
+          "matches": 4,
+          "patchedMatches": 4
+        }
+      ],
+      "expectedPatchedMatches": 5
+    },
+    {
+      "id": "web.add",
+      "source": "Add",
+      "target": "添加",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-greeting/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 5
+    },
+    {
+      "id": "web.update",
+      "source": "Update",
+      "target": "更新",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/project-tracker/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.skip",
+      "source": "Skip",
+      "target": "跳过",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.retry",
+      "source": "Retry",
+      "target": "重试",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 8
+    },
+    {
+      "id": "web.accept-continue",
+      "source": "Accept & continue",
+      "target": "接受并继续",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.actions",
+      "source": "Actions",
+      "target": "操作",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.active",
+      "source": "Active",
+      "target": "进行中",
+      "expectedMatches": 6,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/project-tracker/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 6
+    },
+    {
+      "id": "web.add-a-detail-correction-deadline-or-anything-dia-should-carry-into-this-task",
+      "source": "Add a detail, correction, deadline, or anything Dia should carry into this task.",
+      "target": "添加细节、更正、截止日期，或任何应由 Dia 带入此任务的信息。",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.add-a-new-task-to-track",
+      "source": "Add a new task to track",
+      "target": "添加要跟踪的新任务",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.add-a-to-do",
+      "source": "Add a to-do",
+      "target": "添加待办事项",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.add-or-change-goals",
+      "source": "Add or change goals",
+      "target": "添加或更改目标",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-greeting/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.add-task",
+      "source": "Add task",
+      "target": "添加任务",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 6
+    },
+    {
+      "id": "web.add-task-2",
+      "source": "Add Task",
+      "target": "添加任务",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/desk/index.html",
+          "matches": 1,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.add-to-plan",
+      "source": "Add to plan",
+      "target": "添加到计划",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.add-your-own",
+      "source": "Add your own",
+      "target": "自行添加",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.all-caught-up-nothing-new-since-your-plan",
+      "source": "All caught up. Nothing new since your plan.",
+      "target": "已全部处理。自制定计划后没有新内容。",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.an-error-occurred",
+      "source": "An error occurred:",
+      "target": "发生错误：",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.anything-dia-should-carry-forward",
+      "source": "Anything Dia should carry forward",
+      "target": "需要 Dia 继续保留的任何信息",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.anything-in-your-way",
+      "source": "Anything in your way?",
+      "target": "有什么阻碍吗？",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-goal/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.artifact-generation-cancelled",
+      "source": "Artifact generation cancelled.",
+      "target": "已取消生成内容。",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.ask-about-this-page",
+      "source": "Ask about this page",
+      "target": "询问此页面",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.awaiting-reply",
+      "source": "Awaiting reply",
+      "target": "等待回复",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.back-to-share-outs",
+      "source": "Back to Share-Outs",
+      "target": "返回分享内容",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.back-to-task-list",
+      "source": "Back to task list",
+      "target": "返回任务列表",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.back-to-task-overview",
+      "source": "Back to task overview",
+      "target": "返回任务概览",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.back-to-the-postcard",
+      "source": "Back to the postcard",
+      "target": "返回明信片",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.back-to-to-dos",
+      "source": "Back to to-dos",
+      "target": "返回待办事项",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.blocked",
+      "source": "Blocked",
+      "target": "受阻",
+      "expectedMatches": 3,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/project-tracker/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        }
+      ],
+      "expectedPatchedMatches": 3
+    },
+    {
+      "id": "web.copied",
+      "source": "Copied",
+      "target": "已复制",
+      "expectedMatches": 5,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-output/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/mission/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 5
+    },
+    {
+      "id": "web.copy-as-image",
+      "source": "Copy as image",
+      "target": "复制为图片",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-as-markdown",
+      "source": "Copy as Markdown",
+      "target": "复制为 Markdown",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-as-plain-text",
+      "source": "Copy as plain text",
+      "target": "复制为纯文本",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-as-text",
+      "source": "Copy as text",
+      "target": "复制为文本",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-code",
+      "source": "Copy code",
+      "target": "复制代码",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-message",
+      "source": "Copy message",
+      "target": "复制消息",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.copy-table-as",
+      "source": "Copy table as",
+      "target": "将表格复制为",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.copy-text-to-clipboard",
+      "source": "Copy text to clipboard",
+      "target": "将文本复制到剪贴板",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.creating-artifact",
+      "source": "Creating artifact",
+      "target": "正在创建内容",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.current-project",
+      "source": "Current project",
+      "target": "当前项目",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/top-people/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.current-state",
+      "source": "Current state",
+      "target": "当前状态",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/task-list-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.decided",
+      "source": "Decided",
+      "target": "已决定",
+      "expectedMatches": 4,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 3,
+          "patchedMatches": 3
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/project-tracker/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 4
+    },
+    {
+      "id": "web.delete-this-share-out",
+      "source": "Delete this share-out?",
+      "target": "删除此分享内容？",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/library/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.deleted",
+      "source": "Deleted",
+      "target": "已删除",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/rhythm-pressing-todos/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.describe-something-else",
+      "source": "Describe something else",
+      "target": "描述其他内容",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_MorningBriefTeaserBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.deselect-all",
+      "source": "Deselect all",
+      "target": "取消全选",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/menu-detail/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.details",
+      "source": "Details",
+      "target": "详细信息",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_HomeWebBundle.bundle/Contents/Resources/Bundle/Modules/leaderboard/index.html",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.dia-can-answer-questions-about-what-you-re-looking-at",
+      "source": "Dia can answer questions about what you're looking at.",
+      "target": "Dia 可以回答与你当前查看内容有关的问题。",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.dia-chat",
+      "source": "Dia chat",
+      "target": "Dia 聊天",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/2.DLyuT2XF.js",
+          "matches": 1,
+          "patchedMatches": 1
+        },
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.dictate-with-voice",
+      "source": "Dictate with voice",
+      "target": "使用语音输入",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/BoostBrowser_WelcomePostcardBundle.bundle/Contents/Resources/site/index.html",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.helpful",
+      "source": "Helpful",
+      "target": "有帮助",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.needs-improvement",
+      "source": "Needs improvement",
+      "target": "需要改进",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.open-in-new-tab",
+      "source": "Open in new tab",
+      "target": "在新标签页中打开",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.please-share-any-details-you-can-we-read-every-piece-of-feedback",
+      "source": "Please share any details you can! We read every piece of feedback.",
+      "target": "请尽量提供详细信息！我们会阅读每一条反馈。",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.privacy-policy",
+      "source": "Privacy Policy",
+      "target": "隐私政策",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.reasons",
+      "source": "Reasons",
+      "target": "原因",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.see-all",
+      "source": "See All",
+      "target": "查看全部",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.share-feedback",
+      "source": "Share Feedback",
+      "target": "分享反馈",
+      "expectedMatches": 2,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 2,
+          "patchedMatches": 2
+        }
+      ],
+      "expectedPatchedMatches": 2
+    },
+    {
+      "id": "web.spreadsheet",
+      "source": "Spreadsheet",
+      "target": "电子表格",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    },
+    {
+      "id": "web.submit-feedback",
+      "source": "Submit Feedback",
+      "target": "提交反馈",
+      "expectedMatches": 1,
+      "files": [
+        {
+          "path": "Contents/Resources/web-chat-resources/dist/app/immutable/nodes/4.DsaB5u5Q.js",
+          "matches": 1,
+          "patchedMatches": 1
+        }
+      ],
+      "expectedPatchedMatches": 1
+    }
+  ],
+  "webHashManifests": {
+    "original": "manifests/1.41.1-84131.webui-original.sha256",
+    "patched": "manifests/1.41.1-84131.webui-patched.sha256"
+  },
+  "expectedTotalPatchedMatches": 223
+}
