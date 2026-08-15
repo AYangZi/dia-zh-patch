@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Static, plist, menu and signing tests
+        run: ./tests/run-tests.zsh
+      - name: Confirm arm64 release library
+        run: |
+          ./scripts/build-menu.zsh /tmp/DiaZhMenu.dylib
+          file /tmp/DiaZhMenu.dylib | grep -q arm64

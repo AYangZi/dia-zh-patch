@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 私密安全报告
+    url: https://github.com/AYangZi/dia-zh-patch/security/advisories/new
+    about: 未公开安全问题请使用私密报告，不要创建公开 Issue。

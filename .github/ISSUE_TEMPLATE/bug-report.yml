@@ -1,0 +1,50 @@
+name: 安装或运行问题
+description: 报告安装、签名、Code 6、恢复或兼容问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 请先运行 `./dia-zh.command status` 和 `./dia-zh.command audit`，并删除个人信息。
+  - type: input
+    id: patch-version
+    attributes:
+      label: 补丁版本
+      placeholder: 0.1.0-rc.2
+    validations:
+      required: true
+  - type: input
+    id: dia-version
+    attributes:
+      label: Dia 版本与 Build
+      placeholder: 1.41.1 (84131)
+    validations:
+      required: true
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS 版本与芯片
+      placeholder: macOS 15.x, Apple Silicon
+    validations:
+      required: true
+  - type: dropdown
+    id: coverage
+    attributes:
+      label: status 显示的覆盖级别
+      options: [full, core, incompatible, unknown]
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: 已脱敏的 status / audit 输出
+      description: 不要上传 Dia.app、备份、账号、书签、历史、工作区名称或用户数据。
+      render: shell
+    validations:
+      required: true

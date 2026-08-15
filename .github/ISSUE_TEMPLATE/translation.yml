@@ -1,0 +1,33 @@
+name: 翻译问题
+description: 报告英文残留、错译或用户内容被误翻译
+title: "[翻译] "
+labels: [translation]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: 出现位置
+      placeholder: 文件菜单 / 设置 / 新标签页
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: 英文原文
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: 当前译文
+  - type: input
+    id: expected
+    attributes:
+      label: 建议译文
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 上下文
+      description: 截图前请遮挡账号、标签页、网页标题和工作区名称。
