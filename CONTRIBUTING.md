@@ -26,6 +26,23 @@
 和真实设备验收，然后追加到 `manifests/index.json`。不要放宽旧规则来兼容新文件。
 没有完整基线的 Build 只能使用核心模式。
 
+清单可以用 `scripts/derive-webui-manifest.mjs` 从官方应用和统一词表推导：
+
+```zsh
+node scripts/derive-webui-manifest.mjs --app /Applications/Dia.app --version <版本> --build <Build>
+node scripts/derive-webui-manifest.mjs --app /Applications/Dia.app --version <版本> --build <Build> --write
+node scripts/derive-webui-manifest.mjs --app /Applications/Dia.app --check manifests/<版本>-<Build>.json
+```
+
+追加 Build 之前必须用官方应用跑一遍只读审计，确认命中数与清单完全一致：
+
+```zsh
+osascript -l JavaScript scripts/patch-webui.jxa audit /Applications/Dia.app manifests/<版本>-<Build>.json /tmp/audit.json
+```
+
+推导只覆盖统一词表里已有的译文；新增文案要先补 `translations/zh-Hans.strings`，
+且不要在 `translations/zh-Hans.strings` 之外再维护第二份译文表。
+
 ## 禁止提交
 
 不要提交 Dia.app、官方二进制或官方 JS/HTML、预编译 `.dylib`、Release ZIP、用户

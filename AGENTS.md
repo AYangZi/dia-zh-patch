@@ -8,3 +8,5 @@
 - 恢复不得跨 Build 覆盖；官方更新后的旧状态必须标记为 superseded。
 - 不提交 Dia.app、官方资源/二进制、用户数据、备份、报告、状态或预编译 dylib。
 - 源码保持最小改动；公开文档不得包含个人账号、标签页、工作区名称或本机路径。
+- 新增 Build、修改安装流程或改动词表后，必须同步更新 README 的新机安装流程、
+  `docs/AI_AGENT_PROMPT.md` 的提示词与 `docs/QA_CHECKLIST.md` 的验收记录。

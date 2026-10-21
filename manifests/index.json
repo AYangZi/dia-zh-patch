@@ -8,6 +8,14 @@
       "manifest": "manifests/1.41.1-84131.json",
       "originalWebHashes": "manifests/1.41.1-84131.webui-original.sha256",
       "patchedWebHashes": "manifests/1.41.1-84131.webui-patched.sha256"
+    },
+    {
+      "shortVersion": "1.53.0",
+      "buildVersion": "88760",
+      "coverage": "full",
+      "manifest": "manifests/1.53.0-88760.json",
+      "originalWebHashes": "manifests/1.53.0-88760.webui-original.sha256",
+      "patchedWebHashes": "manifests/1.53.0-88760.webui-patched.sha256"
     }
   ]
 }
