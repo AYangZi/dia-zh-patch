@@ -197,14 +197,64 @@ static BOOL DiaZhShouldTranslateItem(NSMenuItem *item, NSString *source) {
   return item.menu != nil;
 }
 
+static NSString *DiaZhDefaultGroupTitle(NSString *title) {
+  return [title isEqualToString:@"Imported Tabs"]
+    ? DiaZhTranslations()[@"Imported Tabs"] : nil;
+}
+
+static BOOL DiaZhIsGroupContextMenu(NSMenuItem *item) {
+  // A context menu has no main-menu root. Require group-specific actions as
+  // well, so a bookmark/page named like a chat action remains user content.
+  if (!item.menu || DiaZhRootMenuSource(item)) {
+    return NO;
+  }
+  for (NSMenuItem *sibling in item.menu.itemArray) {
+    IMP original = DiaZhOriginalImplementation(sibling, DiaZhTitleImplementations);
+    NSString *title = original
+      ? ((NSString *(*)(id, SEL))original)(sibling, @selector(title)) : @"";
+    NSString *source = DiaZhSourceForTitle(title);
+    if ([source isEqualToString:@"Move to Bookmark Bar"] ||
+        [source isEqualToString:@"Move to bookmark bar"]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 static NSString *DiaZhDynamicTranslationForItem(
   NSMenuItem *item,
   NSString *title
 ) {
   NSString *normalized = DiaZhNormalizedSource(title);
   NSString *root = DiaZhRootMenuSource(item);
-  if (!normalized || !root) {
+  if (!normalized) {
     return nil;
+  }
+
+  if (DiaZhIsGroupContextMenu(item)) {
+    for (NSString *source in @[
+      @"Chat with \"%@\"", @"Chat With \"%@\"",
+      @"Chat with “%@”", @"Chat With “%@”"
+    ]) {
+      NSString *format = DiaZhTranslations()[source];
+      if (format && DiaZhShouldTranslateItem(item, source) &&
+          [normalized isEqualToString:
+            [NSString stringWithFormat:format, @"Imported Tabs"]]) {
+        return [NSString stringWithFormat:format,
+          DiaZhDefaultGroupTitle(@"Imported Tabs") ?: @"Imported Tabs"];
+      }
+      NSArray<NSString *> *parts = [source componentsSeparatedByString:@"%@"];
+      NSString *prefix = parts.firstObject;
+      NSString *suffix = parts.lastObject;
+      if ([normalized hasPrefix:prefix] && [normalized hasSuffix:suffix] &&
+          normalized.length > prefix.length + suffix.length &&
+          DiaZhShouldTranslateItem(item, source)) {
+        NSString *name = [normalized substringWithRange:NSMakeRange(
+          prefix.length, normalized.length - prefix.length - suffix.length)];
+        return [NSString stringWithFormat:DiaZhTranslations()[source],
+          DiaZhDefaultGroupTitle(name) ?: name];
+      }
+    }
   }
 
   if ([root isEqualToString:@"Dia"]) {
@@ -525,6 +575,101 @@ static void DiaZhInstallTitleHook(void) {
   DiaZhInstallTitleHooksForClass(NSMenuItem.class);
 }
 
+static IMP DiaZhGroupLabelSetString;
+static IMP DiaZhGroupLabelSetAttributedString;
+static IMP DiaZhGroupLabelLayout;
+
+static BOOL DiaZhIsDefaultGroupLabel(NSTextField *label) {
+  if (label.editable || label.currentEditor) {
+    return NO;
+  }
+  // Only Dia's read-only group-header label, never tab cells, rename fields,
+  // bookmark labels or web content. Unknown future view hierarchies fail closed.
+  for (NSView *view = label.superview; view; view = view.superview) {
+    NSString *name = NSStringFromClass(view.class);
+    if ([name isEqualToString:@"TabUI.TabGroupCellView"] ||
+        [name isEqualToString:@"TabUI.TabGroupView"] ||
+        [name isEqualToString:@"_TtC5TabUI16TabGroupCellView"] ||
+        [name isEqualToString:@"_TtC5TabUI12TabGroupView"]) {
+      return YES;
+    }
+    if (![name isEqualToString:@"NSView"] &&
+        ![name isEqualToString:@"ARCUI.FlippedView"] &&
+        ![name isEqualToString:@"_TtC5ARCUI11FlippedView"] &&
+        !([name hasPrefix:@"TabUI.TabGroupView."] &&
+          [name hasSuffix:@".HeaderView"]) &&
+        !([name hasPrefix:@"_TtCC5TabUI12TabGroupView"] &&
+          [name hasSuffix:@"10HeaderView"])) {
+      return NO;
+    }
+  }
+  return NO;
+}
+
+static void DiaZhGroupLabelSetStringValue(
+  NSTextField *label, SEL selector, NSString *value
+) {
+  NSString *translated = DiaZhIsDefaultGroupLabel(label)
+    ? DiaZhDefaultGroupTitle(value) : nil;
+  ((void (*)(id, SEL, NSString *))DiaZhGroupLabelSetString)(
+    label, selector, translated ?: value);
+}
+
+static void DiaZhGroupLabelSetAttributedStringValue(
+  NSTextField *label, SEL selector, NSAttributedString *value
+) {
+  NSString *translated = DiaZhIsDefaultGroupLabel(label)
+    ? DiaZhDefaultGroupTitle(value.string) : nil;
+  if (translated) {
+    NSMutableAttributedString *localized = value.mutableCopy;
+    [localized replaceCharactersInRange:NSMakeRange(0, localized.length)
+                             withString:translated];
+    value = localized;
+  }
+  ((void (*)(id, SEL, NSAttributedString *))DiaZhGroupLabelSetAttributedString)(
+    label, selector, value);
+}
+
+static void DiaZhGroupLabelWillLayout(NSTextField *label, SEL selector) {
+  // The initial title can be assigned before the label is attached. Applying
+  // it before layout also lets AppKit measure the translated text correctly.
+  if (DiaZhIsDefaultGroupLabel(label) &&
+      DiaZhDefaultGroupTitle(label.stringValue)) {
+    label.attributedStringValue = label.attributedStringValue;
+  }
+  ((void (*)(id, SEL))DiaZhGroupLabelLayout)(label, selector);
+}
+
+static void DiaZhInstallGroupTitleHooks(void) {
+  if (DiaZhGroupLabelLayout) {
+    return;
+  }
+  Class cls = NSClassFromString(@"_TtC5ARCUI24FeatheredTruncatingLabel");
+  if (!cls || ![cls isSubclassOfClass:NSTextField.class]) {
+    return;
+  }
+  SEL selectors[] = {
+    @selector(setStringValue:), @selector(setAttributedStringValue:),
+    @selector(layout)
+  };
+  IMP hooks[] = {
+    (IMP)DiaZhGroupLabelSetStringValue,
+    (IMP)DiaZhGroupLabelSetAttributedStringValue,
+    (IMP)DiaZhGroupLabelWillLayout
+  };
+  IMP *originals[] = {
+    &DiaZhGroupLabelSetString, &DiaZhGroupLabelSetAttributedString,
+    &DiaZhGroupLabelLayout
+  };
+  for (NSUInteger index = 0; index < 3; index++) {
+    Method method = class_getInstanceMethod(cls, selectors[index]);
+    *originals[index] = method_getImplementation(method);
+    // Add inherited methods on this class instead of modifying NSTextField.
+    class_replaceMethod(cls, selectors[index], hooks[index],
+                        method_getTypeEncoding(method));
+  }
+}
+
 __attribute__((constructor))
 static void DiaZhInstallMenuTranslator(void) {
   // dyld has already loaded us. The app-relative path must not be inherited
@@ -537,11 +682,13 @@ static void DiaZhInstallMenuTranslator(void) {
   }
   DiaZhInstallTitleHook();
   dispatch_async(dispatch_get_main_queue(), ^{
+    DiaZhInstallGroupTitleHooks();
     NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
     [center addObserverForName:NSApplicationDidFinishLaunchingNotification
                        object:nil
                         queue:NSOperationQueue.mainQueue
                    usingBlock:^(__unused NSNotification *notification) {
+      DiaZhInstallGroupTitleHooks();
       DiaZhTranslateAllMenus();
     }];
     [center addObserverForName:NSMenuDidBeginTrackingNotification

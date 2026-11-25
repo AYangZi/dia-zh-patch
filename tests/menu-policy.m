@@ -84,6 +84,9 @@ int main(int argc, const char *argv[]) {
 
     // Newly covered native actions must not turn matching user titles into UI.
     for (NSString *source in @[
+      @"Add Icon", @"Change Icon", @"Separate Tabs", @"Copy All Links",
+      @"Copy All Links as Markdown", @"Move to Bookmark Bar",
+      @"New Tabs Open in Group", @"Mute Site", @"Unmute Site",
       @"Chat With This Tab", @"Open as Split", @"New Group", @"Pin as Tab",
       @"Add to Bookmarks…", @"Copy Link as Markdown", @"Remove Bookmark",
       @"Close Tabs Below", @"Close Tabs Above", @"New Tab in Group",
@@ -142,6 +145,35 @@ int main(int argc, const char *argv[]) {
       [[NSMenuItem alloc] initWithTitle:@"Help" action:nil keyEquivalent:@""];
     AssertPolicy(detached, @"Help", NO,
       @"detached construction-time title should not translate");
+
+    NSMenu *groupMenu = [[NSMenu alloc] initWithTitle:@""];
+    NSMenuItem *moveGroup = [[NSMenuItem alloc]
+      initWithTitle:@"Move to Bookmark Bar" action:nil keyEquivalent:@""];
+    [groupMenu addItem:moveGroup];
+    DiaZhTranslateMenu(groupMenu); // Detection must also accept translated actions.
+    NSDictionary *groupTitles = @{
+      @"与“Imported Tabs”聊天": @"与“已导入的标签页”聊天",
+      @"Chat with \"Imported Tabs\"": @"与“已导入的标签页”聊天",
+      @"Chat With “Imported Tabs”": @"与“已导入的标签页”聊天",
+      @"Chat with \"Research 100%\"": @"与“Research 100%”聊天",
+      @"Chat with \"Imported Tabs 2\"": @"与“Imported Tabs 2”聊天"
+    };
+    for (NSString *source in groupTitles) {
+      NSMenuItem *chat = [[NSMenuItem alloc] initWithTitle:source
+        action:nil keyEquivalent:@""];
+      NSCAssert([chat.title isEqualToString:source], @"detached chat title");
+      [groupMenu addItem:chat];
+      NSCAssert([chat.title isEqualToString:groupTitles[source]],
+        @"group chat should translate its action, preserving custom names");
+      for (NSMenu *other in @[bookmarks, history, window, tabs,
+          [[NSMenu alloc] initWithTitle:@"Unrelated context"]]) {
+        NSMenuItem *userTitle = [[NSMenuItem alloc] initWithTitle:source
+          action:nil keyEquivalent:@""];
+        [other addItem:userTitle];
+        NSCAssert([userTitle.title isEqualToString:source],
+          @"chat-like titles outside a group context must not translate");
+      }
+    }
 
     NSLog(@"Menu collision policy passed.");
   }

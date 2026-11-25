@@ -173,3 +173,23 @@ Previous profile
 Tab Switcher (backward)
 Tab switcher (backward)
 Upgrade Plan…
+Add Icon
+Add icon
+Change Icon
+Change icon
+Separate Tabs
+Separate tabs
+Copy All Links
+Copy all links
+Copy All Links as Markdown
+Copy all links as Markdown
+Move to Bookmark Bar
+Move to bookmark bar
+New Tabs Open in Group
+New tabs open in group
+Chat with "%@"
+Chat With "%@"
+Chat with “%@”
+Chat With “%@”
+Mute Site
+Unmute Site
