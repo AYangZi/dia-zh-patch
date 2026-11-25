@@ -102,16 +102,21 @@ static NSString *DiaZhSourceForTitle(NSString *title) {
     return normalized;
   }
 
-  __block NSString *source;
-  [DiaZhTranslations() enumerateKeysAndObjectsUsingBlock:
-    ^(NSString *key, NSString *value, BOOL *stop) {
-      if ([DiaZhMenuKeys() containsObject:key] &&
-          [value isEqualToString:normalized]) {
-        source = key;
-        *stop = YES;
-      }
-    }];
-  return source;
+  // Menu getters run repeatedly during AppKit layout. Build the reverse map
+  // once instead of walking the entire catalog for every view property.
+  static NSDictionary<NSString *, NSString *> *sources;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSMutableDictionary *loaded = NSMutableDictionary.dictionary;
+    [DiaZhTranslations() enumerateKeysAndObjectsUsingBlock:
+      ^(NSString *key, NSString *value, __unused BOOL *stop) {
+        if ([DiaZhMenuKeys() containsObject:key] && !loaded[value]) {
+          loaded[value] = key;
+        }
+      }];
+    sources = loaded.copy;
+  });
+  return sources[normalized];
 }
 
 static NSString *DiaZhRootMenuSource(NSMenuItem *item) {
@@ -226,36 +231,44 @@ static NSString *DiaZhDynamicTranslationForItem(
   NSString *title
 ) {
   NSString *normalized = DiaZhNormalizedSource(title);
-  NSString *root = DiaZhRootMenuSource(item);
   if (!normalized) {
     return nil;
   }
 
-  if (DiaZhIsGroupContextMenu(item)) {
-    for (NSString *source in @[
-      @"Chat with \"%@\"", @"Chat With \"%@\"",
-      @"Chat with “%@”", @"Chat With “%@”"
-    ]) {
-      NSString *format = DiaZhTranslations()[source];
-      if (format && DiaZhShouldTranslateItem(item, source) &&
-          [normalized isEqualToString:
-            [NSString stringWithFormat:format, @"Imported Tabs"]]) {
-        return [NSString stringWithFormat:format,
-          DiaZhDefaultGroupTitle(@"Imported Tabs") ?: @"Imported Tabs"];
-      }
+  // First recognize the narrow dynamic action grammar. Scanning every sibling
+  // for arbitrary bookmark/view text turns a large submenu into quadratic work.
+  for (NSString *source in @[
+    @"Chat with \"%@\"", @"Chat With \"%@\"",
+    @"Chat with “%@”", @"Chat With “%@”"
+  ]) {
+    NSString *format = DiaZhTranslations()[source];
+    NSString *name;
+    if (format && [normalized isEqualToString:
+        [NSString stringWithFormat:format, @"Imported Tabs"]]) {
+      name = @"Imported Tabs";
+    } else {
       NSArray<NSString *> *parts = [source componentsSeparatedByString:@"%@"];
       NSString *prefix = parts.firstObject;
       NSString *suffix = parts.lastObject;
       if ([normalized hasPrefix:prefix] && [normalized hasSuffix:suffix] &&
-          normalized.length > prefix.length + suffix.length &&
-          DiaZhShouldTranslateItem(item, source)) {
-        NSString *name = [normalized substringWithRange:NSMakeRange(
+          normalized.length > prefix.length + suffix.length) {
+        name = [normalized substringWithRange:NSMakeRange(
           prefix.length, normalized.length - prefix.length - suffix.length)];
-        return [NSString stringWithFormat:DiaZhTranslations()[source],
-          DiaZhDefaultGroupTitle(name) ?: name];
       }
     }
+    if (name && DiaZhShouldTranslateItem(item, source) &&
+        DiaZhIsGroupContextMenu(item)) {
+      return [NSString stringWithFormat:format,
+        DiaZhDefaultGroupTitle(name) ?: name];
+    }
   }
+
+  if (![normalized hasPrefix:@"Install Update"] &&
+      ![normalized hasPrefix:@"Downloading Update"] &&
+      ![normalized hasSuffix:@" Tabs"]) {
+    return nil;
+  }
+  NSString *root = DiaZhRootMenuSource(item);
 
   if ([root isEqualToString:@"Dia"]) {
     for (NSString *source in @[
@@ -428,9 +441,8 @@ static void DiaZhTranslateMenu(NSMenu *menu) {
     if (translated && ![item.title isEqualToString:translated]) {
       item.title = translated;
     }
-    if (item.submenu) {
-      DiaZhTranslateMenu(item.submenu);
-    }
+    // Submenus may contain thousands of bookmark rows. Translate them when
+    // they begin tracking, not recursively while opening their parent menu.
     if (item.view) {
       DiaZhTranslateView(item, item.view);
     }
@@ -439,39 +451,34 @@ static void DiaZhTranslateMenu(NSMenu *menu) {
 
 static void DiaZhTranslateAllMenus(void);
 
-static void DiaZhTranslateMenuWindows(void) {
-  for (NSWindow *window in NSApp.windows) {
-    NSString *className = NSStringFromClass(window.class).lowercaseString;
-    if ([className containsString:@"menu"] ||
-        window.level >= NSPopUpMenuWindowLevel) {
-      for (NSMenuItem *item in NSApp.mainMenu.itemArray) {
-        if (item.view && item.view.window == window) {
-          DiaZhTranslateView(item, window.contentView);
-          break;
-        }
-      }
-    }
-  }
-}
+static char DiaZhTrackingTokenKey;
 
 static void DiaZhTranslateTrackedMenu(NSMenu *menu) {
-  const NSTimeInterval delays[] = {
-    0.0, 0.01, 0.03, 0.05, 0.10, 0.15, 0.25, 0.40, 0.70
-  };
-  const NSUInteger count = sizeof(delays) / sizeof(delays[0]);
-  for (NSUInteger index = 0; index < count; index++) {
-    dispatch_after(
-      dispatch_time(
-        DISPATCH_TIME_NOW,
-        (int64_t)(delays[index] * NSEC_PER_SEC)
-      ),
-      dispatch_get_main_queue(),
-      ^{
-        DiaZhTranslateMenu(menu);
-        DiaZhTranslateAllMenus();
-        DiaZhTranslateMenuWindows();
-      }
-    );
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [NSNotificationCenter.defaultCenter
+      addObserverForName:NSMenuDidEndTrackingNotification
+      object:nil queue:NSOperationQueue.mainQueue
+      usingBlock:^(NSNotification *notification) {
+        if ([notification.object isKindOfClass:NSMenu.class]) {
+          objc_setAssociatedObject(notification.object, &DiaZhTrackingTokenKey,
+            nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+      }];
+  });
+  NSObject *token = [[NSObject alloc] init];
+  objc_setAssociatedObject(menu, &DiaZhTrackingTokenKey, token,
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  // One pass for existing items, one for items attached during menu opening.
+  // Closing/reopening the menu invalidates queued work from the old session.
+  for (NSNumber *delay in @[@0.0, @0.1]) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+        (int64_t)(delay.doubleValue * NSEC_PER_SEC)),
+      dispatch_get_main_queue(), ^{
+        if (objc_getAssociatedObject(menu, &DiaZhTrackingTokenKey) == token) {
+          DiaZhTranslateMenu(menu);
+        }
+      });
   }
 }
 

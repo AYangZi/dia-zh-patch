@@ -41,6 +41,13 @@ DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
 
 xcrun clang \
   -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
+  -framework Cocoa "$ROOT/tests/menu-work-bounds.m" \
+  -o "$BUILD_DIR/menu-work-bounds"
+DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
+  "$BUILD_DIR/menu-work-bounds" "$ROOT/translations"
+
+xcrun clang \
+  -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
   -framework Cocoa "$ROOT/tests/group-title-policy.m" \
   -o "$BUILD_DIR/group-title-policy"
 DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
