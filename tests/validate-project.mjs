@@ -148,7 +148,7 @@ assert.ok(
 );
 
 const stringEntries = [...strings.matchAll(/^"((?:\\.|[^"])*)"\s*=\s*"((?:\\.|[^"])*)";$/gm)];
-assert.equal(stringEntries.length, 408, "translation catalog count changed unexpectedly");
+assert.equal(stringEntries.length, 497, "translation catalog count changed unexpectedly");
 const stringKeys = stringEntries.map((entry) => entry[1]);
 const duplicateKeys = stringKeys.filter((key, index) => stringKeys.indexOf(key) !== index);
 assert.deepEqual([...new Set(duplicateKeys)], [], "Localizable.strings contains duplicate keys");
@@ -166,7 +166,7 @@ for (const entry of stringEntries) {
 }
 
 const catalog = new Map(stringEntries.map((entry) => [entry[1], entry[2]]));
-assert.equal(menuKeys.length, 156);
+assert.equal(menuKeys.length, 175);
 assert.equal(new Set(menuKeys).size, menuKeys.length, "menu keys must be unique");
 for (const key of menuKeys) {
   assert.ok(catalog.has(key), `menu key missing from unified catalog: ${key}`);

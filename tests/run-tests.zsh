@@ -34,6 +34,7 @@ DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
 
 "$ROOT/scripts/build-menu.zsh" "$BUILD_DIR/DiaZhMenu.dylib"
 codesign --verify --strict "$BUILD_DIR/DiaZhMenu.dylib"
+/bin/zsh "$ROOT/tests/menu-loader-fixture.zsh"
 "$ROOT/tests/signing-fixture.zsh"
 "$ROOT/tests/stop-dia-fixture.zsh"
 "$ROOT/tests/status-fixture.zsh"

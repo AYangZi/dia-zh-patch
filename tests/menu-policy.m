@@ -82,6 +82,35 @@ int main(int argc, const char *argv[]) {
     AssertPolicy(copy, @"Copy", YES,
       @"fixed File menu item should translate");
 
+    // Newly covered native actions must not turn matching user titles into UI.
+    for (NSString *source in @[
+      @"Chat With This Tab", @"Open as Split", @"New Group", @"Pin as Tab",
+      @"Add to Bookmarks…", @"Copy Link as Markdown", @"Remove Bookmark",
+      @"Close Tabs Below", @"Close Tabs Above", @"New Tab in Group",
+      @"New Group with Tabs", @"Focus Previous Split Pane",
+      @"Focus Next Split Pane", @"Previous Profile", @"Upgrade Plan…"
+    ]) {
+      NSMenuItem *action = [[NSMenuItem alloc] initWithTitle:source
+        action:nil keyEquivalent:@""];
+      [file addItem:action];
+      NSCAssert([action.title isEqualToString:DiaZhTranslations()[source]],
+        @"fixed native menu action should translate: %@", source);
+      for (NSMenu *protectedMenu in @[bookmarks, history, window]) {
+        NSMenuItem *userTitle = [[NSMenuItem alloc] initWithTitle:source
+          action:nil keyEquivalent:@""];
+        [protectedMenu addItem:userTitle];
+        NSCAssert([userTitle.title isEqualToString:source],
+          @"matching user title must not translate: %@", source);
+      }
+    }
+    for (NSString *source in @[@"Imported Tabs", @"Go", @"Add tabs or files"]) {
+      NSMenuItem *userTitle = [[NSMenuItem alloc] initWithTitle:source
+        action:nil keyEquivalent:@""];
+      [tabs addItem:userTitle];
+      NSCAssert([userTitle.title isEqualToString:source],
+        @"native catalog entries must not become menu title replacements");
+    }
+
     NSMenuItem *installUpdate =
       [[NSMenuItem alloc] initWithTitle:@"Install Update…，1.44.1 (85212)"
                                 action:nil keyEquivalent:@""];

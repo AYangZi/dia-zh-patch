@@ -69,8 +69,13 @@ sanitize_entitlements() {
   rm -f "$raw"
 
   local restricted
+  # APNs requires a provisioning profile and cannot survive ad-hoc signing.
+  # Dia 1.58.2 includes the macOS key; retaining it causes AMFI launch rejection
+  # even when codesign --verify --deep --strict succeeds.
   for restricted in \
+    "aps-environment" \
     "com.apple.application-identifier" \
+    "com.apple.developer.aps-environment" \
     "com.apple.developer.associated-domains" \
     "com.apple.developer.team-identifier" \
     "com.apple.developer.web-browser.public-key-credential" \

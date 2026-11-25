@@ -1,5 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
+#include <stdlib.h>
+#include <string.h>
 
 static NSMutableDictionary<NSString *, NSValue *> *
   DiaZhSetTitleImplementations;
@@ -525,6 +527,14 @@ static void DiaZhInstallTitleHook(void) {
 
 __attribute__((constructor))
 static void DiaZhInstallMenuTranslator(void) {
+  // dyld has already loaded us. The app-relative path must not be inherited
+  // by nested Chromium helpers, where @executable_path resolves elsewhere.
+  // Only clear the exact value installed by dia-zh.command.
+  const char *loader = getenv("DYLD_INSERT_LIBRARIES");
+  if (loader && strcmp(loader,
+      "@executable_path/../Frameworks/DiaZhMenu.dylib") == 0) {
+    unsetenv("DYLD_INSERT_LIBRARIES");
+  }
   DiaZhInstallTitleHook();
   dispatch_async(dispatch_get_main_queue(), ^{
     NSNotificationCenter *center = NSNotificationCenter.defaultCenter;

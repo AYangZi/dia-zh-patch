@@ -154,3 +154,22 @@ Status
 Copy Diagnostics
 Record Performance Issue…
 Record Performance Issue...
+Chat With This Tab
+Open as Split
+New Group
+Pin as Tab
+Add to Bookmarks…
+Copy Link as Markdown
+Remove Bookmark
+Close Tabs Below
+Close Tabs Above
+New tab in group
+New Group with Tabs
+New group with tabs
+Focus previous split pane
+Focus next split pane
+Previous Profile
+Previous profile
+Tab Switcher (backward)
+Tab switcher (backward)
+Upgrade Plan…
