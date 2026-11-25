@@ -81,10 +81,15 @@ static NSString *DiaZhNormalizedSource(NSString *source) {
     return nil;
   }
 
-  NSMutableCharacterSet *padding =
-    NSCharacterSet.whitespaceAndNewlineCharacterSet.mutableCopy;
-  [padding addCharactersInString:
-    @"\u200B\u200C\u200D\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2060\u2066\u2067\u2068\u2069\uFEFF"];
+  static NSCharacterSet *padding;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSMutableCharacterSet *characters =
+      NSCharacterSet.whitespaceAndNewlineCharacterSet.mutableCopy;
+    [characters addCharactersInString:
+      @"\u200B\u200C\u200D\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2060\u2066\u2067\u2068\u2069\uFEFF"];
+    padding = characters.copy;
+  });
   NSString *normalized = [source stringByTrimmingCharactersInSet:padding];
   NSRange tab = [normalized rangeOfString:@"\t"];
   if (tab.location != NSNotFound) {
@@ -93,8 +98,7 @@ static NSString *DiaZhNormalizedSource(NSString *source) {
   return normalized;
 }
 
-static NSString *DiaZhSourceForTitle(NSString *title) {
-  NSString *normalized = DiaZhNormalizedSource(title);
+static NSString *DiaZhSourceForNormalizedTitle(NSString *normalized) {
   if (!normalized) {
     return nil;
   }
@@ -117,6 +121,10 @@ static NSString *DiaZhSourceForTitle(NSString *title) {
     sources = loaded.copy;
   });
   return sources[normalized];
+}
+
+static NSString *DiaZhSourceForTitle(NSString *title) {
+  return DiaZhSourceForNormalizedTitle(DiaZhNormalizedSource(title));
 }
 
 static NSString *DiaZhRootMenuSource(NSMenuItem *item) {
@@ -228,28 +236,44 @@ static BOOL DiaZhIsGroupContextMenu(NSMenuItem *item) {
 
 static NSString *DiaZhDynamicTranslationForItem(
   NSMenuItem *item,
-  NSString *title
+  NSString *normalized
 ) {
-  NSString *normalized = DiaZhNormalizedSource(title);
   if (!normalized) {
     return nil;
   }
 
   // First recognize the narrow dynamic action grammar. Scanning every sibling
   // for arbitrary bookmark/view text turns a large submenu into quadratic work.
-  for (NSString *source in @[
-    @"Chat with \"%@\"", @"Chat With \"%@\"",
-    @"Chat with “%@”", @"Chat With “%@”"
-  ]) {
-    NSString *format = DiaZhTranslations()[source];
+  // Ordinary bookmark titles vastly outnumber translated actions. Compile the
+  // few dynamic formats once; do not split/format strings on every title read.
+  static NSArray<NSDictionary<NSString *, NSString *> *> *chatRules;
+  static dispatch_once_t chatOnceToken;
+  dispatch_once(&chatOnceToken, ^{
+    NSMutableArray *rules = NSMutableArray.array;
+    for (NSString *source in @[
+      @"Chat with \"%@\"", @"Chat With \"%@\"",
+      @"Chat with “%@”", @"Chat With “%@”"
+    ]) {
+      NSString *format = DiaZhTranslations()[source];
+      if (!format) continue;
+      NSArray *parts = [source componentsSeparatedByString:@"%@"];
+      [rules addObject:@{
+        @"source": source, @"format": format,
+        @"prefix": parts.firstObject, @"suffix": parts.lastObject,
+        @"localizedDefault": [NSString stringWithFormat:format, @"Imported Tabs"]
+      }];
+    }
+    chatRules = rules.copy;
+  });
+  for (NSDictionary *rule in chatRules) {
+    NSString *source = rule[@"source"];
+    NSString *format = rule[@"format"];
     NSString *name;
-    if (format && [normalized isEqualToString:
-        [NSString stringWithFormat:format, @"Imported Tabs"]]) {
+    if ([normalized isEqualToString:rule[@"localizedDefault"]]) {
       name = @"Imported Tabs";
     } else {
-      NSArray<NSString *> *parts = [source componentsSeparatedByString:@"%@"];
-      NSString *prefix = parts.firstObject;
-      NSString *suffix = parts.lastObject;
+      NSString *prefix = rule[@"prefix"];
+      NSString *suffix = rule[@"suffix"];
       if ([normalized hasPrefix:prefix] && [normalized hasSuffix:suffix] &&
           normalized.length > prefix.length + suffix.length) {
         name = [normalized substringWithRange:NSMakeRange(
@@ -311,11 +335,14 @@ static NSString *DiaZhDynamicTranslationForItem(
 }
 
 static NSString *DiaZhTranslationForItem(NSMenuItem *item, NSString *title) {
-  NSString *source = DiaZhSourceForTitle(title);
+  // Construction-time items have no safe menu context and cannot translate.
+  if (!item.menu) return nil;
+  NSString *normalized = DiaZhNormalizedSource(title);
+  NSString *source = DiaZhSourceForNormalizedTitle(normalized);
   if (DiaZhShouldTranslateItem(item, source)) {
     return DiaZhTranslations()[source];
   }
-  return DiaZhDynamicTranslationForItem(item, title);
+  return DiaZhDynamicTranslationForItem(item, normalized);
 }
 
 static void DiaZhTranslateStringProperty(
