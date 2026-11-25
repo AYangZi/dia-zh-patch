@@ -10,8 +10,12 @@ and adds native UI translations. These changes are not in the published rc.2 ZIP
 The signer strips restricted APNs entitlements, so official APNs push capability
 is unavailable while patched. The menu library clears its own loader environment
 after loading so nested helpers do not inherit an invalid relative library path.
-Previously saved names such as `Imported Tabs` are user data and must be renamed
-in Dia; the patch only adds a translation for the default name at creation time.
+Existing groups named exactly `Imported Tabs` also display in Chinese in Dia
+1.58.2's native group headers and group chat actions. This changes presentation
+only: saved names, rename fields, custom names and page titles stay intact.
+A custom group with that exact default name receives the same display translation;
+unrecognized view hierarchies are left unchanged. Group context actions such as
+Add Icon, Separate Tabs, Copy All Links and Move to Bookmark Bar are also covered.
 
 Download the macOS arm64 ZIP from GitHub Releases, verify its SHA-256 file,
 quit Dia, then double-click `dia-zh.command`. The stable commands are `apply`,
