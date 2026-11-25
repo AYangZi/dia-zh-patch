@@ -32,8 +32,30 @@ xcrun clang \
 DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
   "$BUILD_DIR/menu-policy" "$ROOT/translations"
 
+xcrun clang \
+  -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
+  -framework Cocoa "$ROOT/tests/menu-reentrancy.m" \
+  -o "$BUILD_DIR/menu-reentrancy"
+DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
+  "$BUILD_DIR/menu-reentrancy" "$ROOT/translations"
+
+xcrun clang \
+  -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
+  -framework Cocoa "$ROOT/tests/menu-work-bounds.m" \
+  -o "$BUILD_DIR/menu-work-bounds"
+DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
+  "$BUILD_DIR/menu-work-bounds" "$ROOT/translations"
+
+xcrun clang \
+  -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
+  -framework Cocoa "$ROOT/tests/group-title-policy.m" \
+  -o "$BUILD_DIR/group-title-policy"
+DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
+  "$BUILD_DIR/group-title-policy" "$ROOT/translations"
+
 "$ROOT/scripts/build-menu.zsh" "$BUILD_DIR/DiaZhMenu.dylib"
 codesign --verify --strict "$BUILD_DIR/DiaZhMenu.dylib"
+/bin/zsh "$ROOT/tests/menu-loader-fixture.zsh"
 "$ROOT/tests/signing-fixture.zsh"
 "$ROOT/tests/stop-dia-fixture.zsh"
 "$ROOT/tests/status-fixture.zsh"

@@ -10,6 +10,9 @@ Build 额外执行严格限定的 WebUI 替换。
 （Build `84131`）；核心模式另已实测 Dia `1.44.1`（Build `85212`）。系统要求
 macOS 14 或更高版本。
 
+当前源码另包含 Dia `1.58.2 (91529)` 的核心模式启动修复与原生界面词条补充；
+这些变更尚不在已发布的 `v0.1.0-rc.2` 安装包中。请从源码构建菜单动态库后安装。
+
 > 本项目与 The Browser Company、Dia 或 Atlassian 没有隶属或授权关系。
 > 补丁会把应用改为本机 ad-hoc 签名；请理解风险并保留补丁创建的官方备份。
 
@@ -66,9 +69,16 @@ DIA_ZH_MODE=core ./dia-zh.command apply
 3. 通过源码构建的 arm64 动态库汉化 macOS 静态和动态菜单。
 4. 仅对清单已验证的 Build 执行文件级 WebUI 精确替换。
 
-当前统一词表有 408 个键，其中菜单白名单 156 个。菜单翻译器会保护书签、历史、
+当前统一词表有 515 个键，其中菜单白名单 195 个。菜单翻译器会保护书签、历史、
 窗口名和网页标题等用户内容；普通网页、AI 实时回答、第三方扩展、prompt、agent
 spec 和服务端临时文案不在范围内。
+
+新增词条包括输入栏的 `Go`、`Add tabs or files`、附件选择器、标签组、语音输入
+及部分设置文案，以及标签组的添加图标、解散、复制链接、移至书签栏和动态聊天菜单。
+Dia 1.58.2 中已保存的默认分组名 `Imported Tabs` 也会在分组标题和对应聊天菜单中
+显示为“已导入的标签页”。此处理只针对原生分组标题控件中完全匹配的默认名称，
+不改写持久化名称、重命名输入框、其他自定义名称或网页标题。若用户自行将分组
+命名为完全相同的 `Imported Tabs`，也会应用此显示翻译；不识别的控件结构不处理。
 
 仓库只保存补丁源码、翻译和哈希清单。它不包含 Dia.app、官方 JS/HTML、用户数据、
 备份、审计报告或官方二进制。预编译 `DiaZhMenu.dylib` 只由 GitHub Actions 放入
@@ -77,9 +87,19 @@ Release ZIP。
 ## 签名、Code 6 与恢复
 
 安装后应用使用统一的 ad-hoc 签名。签名器会读取原组件权限，移除 ad-hoc 无法
-保留的 Team ID、application identifier 和 keychain 字段，保留 Renderer/GPU
+保留的 Team ID、application identifier、APNs 推送和 keychain 字段，保留 Renderer/GPU
 的 JIT 权限，并为相关组件加入 Library Validation 兼容设置。签名顺序为内部
 Mach-O、嵌套 Bundle、Framework，最后 Dia.app，并执行严格深度验证。
+
+Dia `1.58.2` 的 APNs 权限不能由 ad-hoc 签名授权。保留它可能导致 POSIX `162`
+及 `Taskgated Invalid Signature`，即使静态签名校验通过。修复版会移除此权限，
+因此无法保留依赖官方授权的 APNs 推送能力；恢复官方备份可恢复对应权限。
+菜单动态库加载后还会清除补丁专用的 `DYLD_INSERT_LIBRARIES` 环境值，避免新版
+Aperitif 辅助进程继承主程序的相对路径而因找不到动态库退出。
+
+重新签名后，macOS 可能再次询问是否允许 Dia 访问它原有的钥匙串项目。若启动
+一直等待，请先查看系统授权弹窗，并由使用者本人完成密码验证；不要删除钥匙串
+项目或浏览器数据来绕过此提示。
 
 若出现 “Something’s not right · Code 6”，请依次运行：
 

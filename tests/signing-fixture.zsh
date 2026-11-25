@@ -59,9 +59,32 @@ ln -s A "$ARC/Versions/Current"
 ln -s Versions/Current/ArcCore "$ARC/ArcCore"
 ln -s Versions/Current/Resources "$ARC/Resources"
 codesign --force --sign - --timestamp=none --options runtime "$ARC" >/dev/null
+# Dia 1.58.2 carries the restricted APNs entitlement. A structurally valid
+# ad-hoc signature can still be rejected at launch if this claim survives.
+readonly APP_ENTITLEMENTS="$FIXTURE_ROOT/app-entitlements.plist"
+cp "$ROOT/native/entitlements/helper.plist" "$APP_ENTITLEMENTS"
+for key in com.apple.developer.aps-environment aps-environment; do
+  /usr/libexec/PlistBuddy -c "Add :$key string production" "$APP_ENTITLEMENTS"
+done
+/usr/libexec/PlistBuddy -c \
+  "Add :com.apple.security.device.camera bool true" "$APP_ENTITLEMENTS"
 codesign --force --sign - --timestamp=none --options runtime \
-  --entitlements "$ROOT/native/entitlements/helper.plist" "$APP" >/dev/null
+  --entitlements "$APP_ENTITLEMENTS" "$APP" >/dev/null
 
 "$ROOT/scripts/sign-app.zsh" "$APP" "$FIXTURE_ROOT/work"
 codesign --verify --deep --strict "$APP"
+codesign -d --entitlements :- "$APP" > "$FIXTURE_ROOT/signed-entitlements.plist" 2>/dev/null
+for key in com.apple.developer.aps-environment aps-environment; do
+  if /usr/libexec/PlistBuddy -c "Print :$key" \
+      "$FIXTURE_ROOT/signed-entitlements.plist" >/dev/null 2>&1; then
+    print -ru2 -- "签名 Fixture 失败：受限推送权限未移除：$key"
+    exit 1
+  fi
+done
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.device.camera' \
+  "$FIXTURE_ROOT/signed-entitlements.plist")" == "true" ]]
+"$APP/Contents/MacOS/Dia"
+for name in 'Browser Helper (GPU)' 'Browser Helper (Renderer)'; do
+  "$ARC_A/Helpers/$name.app/Contents/MacOS/$name"
+done
 print -r -- "签名 Fixture 通过。"
