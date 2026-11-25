@@ -34,6 +34,13 @@ DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
 
 xcrun clang \
   -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
+  -framework Cocoa "$ROOT/tests/menu-reentrancy.m" \
+  -o "$BUILD_DIR/menu-reentrancy"
+DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \
+  "$BUILD_DIR/menu-reentrancy" "$ROOT/translations"
+
+xcrun clang \
+  -fobjc-arc -fblocks -arch "$HOST_ARCH" -mmacosx-version-min=14.0 \
   -framework Cocoa "$ROOT/tests/group-title-policy.m" \
   -o "$BUILD_DIR/group-title-policy"
 DIA_ZH_RESOURCE_ROOT="$ROOT/translations" \

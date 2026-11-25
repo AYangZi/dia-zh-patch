@@ -17,6 +17,21 @@ static IMP DiaZhOriginalImplementation(
   NSMutableDictionary<NSString *, NSValue *> *implementations
 );
 
+// Shared across the four accessors: an original implementation can call super,
+// another accessor, or another menu item's title while resolving its value.
+static __thread NSUInteger DiaZhMenuTranslationDepth;
+
+static NSString *DiaZhUntranslatedTitle(NSMenuItem *item) {
+  ++DiaZhMenuTranslationDepth;
+  @try {
+    IMP original = DiaZhOriginalImplementation(item, DiaZhTitleImplementations);
+    return original
+      ? ((NSString *(*)(id, SEL))original)(item, @selector(title)) : item.title;
+  } @finally {
+    --DiaZhMenuTranslationDepth;
+  }
+}
+
 static NSString *DiaZhResourcePath(NSString *name) {
   NSString *override = NSProcessInfo.processInfo.environment[
     @"DIA_ZH_RESOURCE_ROOT"
@@ -109,26 +124,13 @@ static NSString *DiaZhRootMenuSource(NSMenuItem *item) {
     menu = menu.supermenu;
   }
   if (menu == NSApp.mainMenu) {
-    IMP implementation =
-      DiaZhOriginalImplementation(item, DiaZhTitleImplementations);
-    NSString *title = implementation
-      ? ((NSString *(*)(id, SEL))implementation)(item, @selector(title))
-      : item.submenu.title;
+    NSString *title = DiaZhUntranslatedTitle(item);
     return DiaZhSourceForTitle(title);
   }
   if (menu.supermenu == NSApp.mainMenu) {
     for (NSMenuItem *candidate in NSApp.mainMenu.itemArray) {
       if (candidate.submenu == menu) {
-        IMP implementation = DiaZhOriginalImplementation(
-          candidate,
-          DiaZhTitleImplementations
-        );
-        NSString *title = implementation
-          ? ((NSString *(*)(id, SEL))implementation)(
-              candidate,
-              @selector(title)
-            )
-          : menu.title;
+        NSString *title = DiaZhUntranslatedTitle(candidate);
         return DiaZhSourceForTitle(title);
       }
     }
@@ -209,9 +211,7 @@ static BOOL DiaZhIsGroupContextMenu(NSMenuItem *item) {
     return NO;
   }
   for (NSMenuItem *sibling in item.menu.itemArray) {
-    IMP original = DiaZhOriginalImplementation(sibling, DiaZhTitleImplementations);
-    NSString *title = original
-      ? ((NSString *(*)(id, SEL))original)(sibling, @selector(title)) : @"";
+    NSString *title = DiaZhUntranslatedTitle(sibling);
     NSString *source = DiaZhSourceForTitle(title);
     if ([source isEqualToString:@"Move to Bookmark Bar"] ||
         [source isEqualToString:@"Move to bookmark bar"]) {
@@ -370,64 +370,54 @@ static IMP DiaZhOriginalImplementation(
   return NULL;
 }
 
-static void DiaZhSetTitle(NSMenuItem *, SEL, NSString *);
-static NSString *DiaZhTitle(NSMenuItem *, SEL);
-static void DiaZhSetAttributedTitle(
-  NSMenuItem *,
-  SEL,
-  NSAttributedString *
-);
-static NSAttributedString *DiaZhAttributedTitle(NSMenuItem *, SEL);
+static void DiaZhSetTitle(NSMenuItem *, SEL, NSString *, IMP);
+static NSString *DiaZhTitle(NSMenuItem *, SEL, IMP);
+static void DiaZhSetAttributedTitle(NSMenuItem *, SEL, NSAttributedString *, IMP);
+static NSAttributedString *DiaZhAttributedTitle(NSMenuItem *, SEL, IMP);
 
 static void DiaZhInstallTitleHooksForClass(Class cls) {
   if (!cls || ![cls isSubclassOfClass:NSMenuItem.class]) {
     return;
   }
-
   NSString *className = NSStringFromClass(cls);
-  if (!DiaZhTitleImplementations[className] &&
-      DiaZhClassDeclaresSelector(cls, @selector(title))) {
-    Method method = class_getInstanceMethod(cls, @selector(title));
-    IMP implementation = method_getImplementation(method);
-    if (implementation != (IMP)DiaZhTitle) {
-      DiaZhTitleImplementations[className] =
-        [NSValue valueWithPointer:implementation];
-      method_setImplementation(method, (IMP)DiaZhTitle);
+  SEL selectors[] = {
+    @selector(title), @selector(setTitle:),
+    @selector(attributedTitle), @selector(setAttributedTitle:)
+  };
+  NSArray *registries = @[
+    DiaZhTitleImplementations, DiaZhSetTitleImplementations,
+    DiaZhAttributedTitleImplementations, DiaZhSetAttributedTitleImplementations
+  ];
+  for (NSUInteger index = 0; index < 4; index++) {
+    SEL selector = selectors[index];
+    NSMutableDictionary *registry = registries[index];
+    if (registry[className] || !DiaZhClassDeclaresSelector(cls, selector)) {
+      continue;
     }
-  }
-
-  if (!DiaZhSetTitleImplementations[className] &&
-      DiaZhClassDeclaresSelector(cls, @selector(setTitle:))) {
-    Method method = class_getInstanceMethod(cls, @selector(setTitle:));
-    IMP implementation = method_getImplementation(method);
-    if (implementation != (IMP)DiaZhSetTitle) {
-      DiaZhSetTitleImplementations[className] =
-        [NSValue valueWithPointer:implementation];
-      method_setImplementation(method, (IMP)DiaZhSetTitle);
+    Method method = class_getInstanceMethod(cls, selector);
+    IMP original = method_getImplementation(method);
+    IMP hook;
+    // Bind the original to the class owning this method. Looking it up using
+    // item.class inside a super call would select the subclass again forever.
+    if (selector == @selector(title)) {
+      hook = imp_implementationWithBlock(^NSString *(NSMenuItem *item) {
+        return DiaZhTitle(item, selector, original);
+      });
+    } else if (selector == @selector(setTitle:)) {
+      hook = imp_implementationWithBlock(^(NSMenuItem *item, NSString *title) {
+        DiaZhSetTitle(item, selector, title, original);
+      });
+    } else if (selector == @selector(attributedTitle)) {
+      hook = imp_implementationWithBlock(^NSAttributedString *(NSMenuItem *item) {
+        return DiaZhAttributedTitle(item, selector, original);
+      });
+    } else {
+      hook = imp_implementationWithBlock(^(NSMenuItem *item, NSAttributedString *title) {
+        DiaZhSetAttributedTitle(item, selector, title, original);
+      });
     }
-  }
-
-  if (!DiaZhAttributedTitleImplementations[className] &&
-      DiaZhClassDeclaresSelector(cls, @selector(attributedTitle))) {
-    Method method = class_getInstanceMethod(cls, @selector(attributedTitle));
-    IMP implementation = method_getImplementation(method);
-    if (implementation != (IMP)DiaZhAttributedTitle) {
-      DiaZhAttributedTitleImplementations[className] =
-        [NSValue valueWithPointer:implementation];
-      method_setImplementation(method, (IMP)DiaZhAttributedTitle);
-    }
-  }
-
-  if (!DiaZhSetAttributedTitleImplementations[className] &&
-      DiaZhClassDeclaresSelector(cls, @selector(setAttributedTitle:))) {
-    Method method =
-      class_getInstanceMethod(cls, @selector(setAttributedTitle:));
-    IMP implementation = method_getImplementation(method);
-    if (implementation != (IMP)DiaZhSetAttributedTitle) {
-      DiaZhSetAttributedTitleImplementations[className] =
-        [NSValue valueWithPointer:implementation];
-      method_setImplementation(method, (IMP)DiaZhSetAttributedTitle);
-    }
+    registry[className] = [NSValue valueWithPointer:original];
+    method_setImplementation(method, hook);
   }
 }
 
@@ -491,80 +481,66 @@ static void DiaZhTranslateAllMenus(void) {
   }
 }
 
-static NSString *DiaZhTitle(NSMenuItem *item, SEL selector) {
-  IMP implementation =
-    DiaZhOriginalImplementation(item, DiaZhTitleImplementations);
-  if (!implementation) {
-    return @"";
+static NSString *DiaZhTitle(NSMenuItem *item, SEL selector, IMP original) {
+  BOOL translate = DiaZhMenuTranslationDepth++ == 0;
+  @try {
+    NSString *title = ((NSString *(*)(id, SEL))original)(item, selector);
+    return translate ? (DiaZhTranslationForItem(item, title) ?: title) : title;
+  } @finally {
+    --DiaZhMenuTranslationDepth;
   }
-  NSString *title =
-    ((NSString *(*)(id, SEL))implementation)(item, selector);
-  return DiaZhTranslationForItem(item, title) ?: title;
 }
 
-static void DiaZhSetTitle(NSMenuItem *item, SEL selector, NSString *title) {
-  NSString *translated = DiaZhTranslationForItem(item, title) ?: title;
-  IMP implementation =
-    DiaZhOriginalImplementation(item, DiaZhSetTitleImplementations);
-  if (implementation) {
-    ((void (*)(id, SEL, NSString *))implementation)(
-      item,
-      selector,
-      translated
-    );
+static void DiaZhSetTitle(
+  NSMenuItem *item, SEL selector, NSString *title, IMP original
+) {
+  BOOL translate = DiaZhMenuTranslationDepth++ == 0;
+  @try {
+    NSString *localized = translate ? DiaZhTranslationForItem(item, title) : nil;
+    ((void (*)(id, SEL, NSString *))original)(item, selector, localized ?: title);
+  } @finally {
+    --DiaZhMenuTranslationDepth;
   }
 }
 
 static NSAttributedString *DiaZhAttributedTitle(
-  NSMenuItem *item,
-  SEL selector
+  NSMenuItem *item, SEL selector, IMP original
 ) {
-  IMP implementation =
-    DiaZhOriginalImplementation(item, DiaZhAttributedTitleImplementations);
-  if (!implementation) {
-    return nil;
+  BOOL translate = DiaZhMenuTranslationDepth++ == 0;
+  @try {
+    NSAttributedString *title =
+      ((NSAttributedString *(*)(id, SEL))original)(item, selector);
+    NSString *translated = translate
+      ? DiaZhTranslationForItem(item, title.string) : nil;
+    if (!translated || [translated isEqualToString:title.string]) {
+      return title;
+    }
+    NSMutableAttributedString *localized = title.mutableCopy;
+    [localized replaceCharactersInRange:NSMakeRange(0, localized.length)
+                             withString:translated];
+    return localized;
+  } @finally {
+    --DiaZhMenuTranslationDepth;
   }
-
-  NSAttributedString *title =
-    ((NSAttributedString *(*)(id, SEL))implementation)(item, selector);
-  NSString *translated = DiaZhTranslationForItem(item, title.string);
-  if (!translated) {
-    return title;
-  }
-  NSMutableAttributedString *localized = title.mutableCopy;
-  [localized replaceCharactersInRange:NSMakeRange(0, localized.length)
-                           withString:translated];
-  return localized;
 }
 
 static void DiaZhSetAttributedTitle(
-  NSMenuItem *item,
-  SEL selector,
-  NSAttributedString *title
+  NSMenuItem *item, SEL selector, NSAttributedString *title, IMP original
 ) {
-  IMP implementation =
-    DiaZhOriginalImplementation(item, DiaZhSetAttributedTitleImplementations);
-  if (!implementation) {
-    return;
+  BOOL translate = DiaZhMenuTranslationDepth++ == 0;
+  @try {
+    NSString *translated = translate
+      ? DiaZhTranslationForItem(item, title.string) : nil;
+    if (translated && ![translated isEqualToString:title.string]) {
+      NSMutableAttributedString *localized = title.mutableCopy;
+      [localized replaceCharactersInRange:NSMakeRange(0, localized.length)
+                               withString:translated];
+      title = localized;
+    }
+    ((void (*)(id, SEL, NSAttributedString *))original)(item, selector, title);
+  } @finally {
+    --DiaZhMenuTranslationDepth;
   }
-
-  NSString *translated = DiaZhTranslationForItem(item, title.string);
-  if (!translated) {
-    ((void (*)(id, SEL, NSAttributedString *))implementation)(
-      item,
-      selector,
-      title
-    );
-    return;
-  }
-  NSMutableAttributedString *localized = title.mutableCopy;
-  [localized replaceCharactersInRange:NSMakeRange(0, localized.length)
-                           withString:translated];
-  ((void (*)(id, SEL, NSAttributedString *))implementation)(
-    item,
-    selector,
-    localized
-  );
 }
 
 static void DiaZhInstallTitleHook(void) {
